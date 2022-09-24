@@ -40,6 +40,13 @@ app.get('/start', (req, res) => {
     sendNotification();
 });
 
+app.get('/', (req, res) => {
+    sendNotification();
+    res.end(`
+    <h1>HELLLLLLO</h1>
+    `)
+});
+
 function startEnterval() {
 
 }
