@@ -2,6 +2,7 @@ const express = require('express');
 const jsdom = require("jsdom");
 const rp = require('request-promise');
 const r = require('request');
+const { get } = require('cheerio/lib/api/traversing');
 
 const port = process.env.PORT || 80;
 
@@ -11,7 +12,7 @@ app.listen(port, () => {
     console.log('started')
 })
 
-async function getEURValue() {
+function getEURValue() {
     const url = `https://myfin.by/currency/mogilev`;
     const {
         JSDOM
@@ -21,7 +22,7 @@ async function getEURValue() {
     global.document = dom.window.document;
     global.navigator = global.window.navigator;
     const table = document.createElement("table");
-    await rp(url).then(function (html) {
+    return rp(url).then(function (html) {
             table.innerHTML += html.split(/<\/?table>/)[1];
             const eurRate = table.querySelector('tbody tr:nth-child(2) td:nth-child(2)');
             return eurRate.textContent;
@@ -46,7 +47,9 @@ app.get('/start', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    sendNotification(getEURValue());
+    getEURValue().then(res => {
+        sendNotification(res);
+    })
     res.end(`
     <h1>HELLLLLLO</h1>
     `)
