@@ -11,9 +11,8 @@ app.listen(port, () => {
     console.log('started')
 })
 
-function sendNotification() {
+async function getEURValue() {
     const url = `https://myfin.by/currency/mogilev`;
-    const botUrl = `https://api.telegram.org/bot5456371619:AAHSXc5X3WQc6Rdsp4JkTJfh11iSnK1lhFs/sendMessage?chat_id=735510453&text=`;
     const {
         JSDOM
     } = jsdom;
@@ -22,41 +21,41 @@ function sendNotification() {
     global.document = dom.window.document;
     global.navigator = global.window.navigator;
     const table = document.createElement("table");
-    rp(url).then(function (html) {
+    await rp(url).then(function (html) {
             table.innerHTML += html.split(/<\/?table>/)[1];
             const eurRate = table.querySelector('tbody tr:nth-child(2) td:nth-child(2)');
-            console.log(`${botUrl}${eurRate.textContent}`);
-            r.get({
-                url: `${botUrl}${eurRate.textContent}`,
-            }, (er, res) => {
-                if(er) {
-                    console.log(er);
-                } else {
-                    console.log(res);
-                }
-            });
+            return eurRate.textContent;
         })
         .catch(function (err) {
             //handle error
         });
 }
 
+function sendNotification(message) {
+    const botUrl = `https://api.telegram.org/bot5456371619:AAHSXc5X3WQc6Rdsp4JkTJfh11iSnK1lhFs/sendMessage?chat_id=735510453&text=`;
+    r.get({
+        url: `${botUrl}${message}`,
+    }, (er, res) => {});
+}
+
+
+
 
 app.get('/start', (req, res) => {
-    sendNotification();
+    sendNotification('start');
 });
 
 app.get('/', (req, res) => {
-    sendNotification();
+    sendNotification(getEURValue());
     res.end(`
     <h1>HELLLLLLO</h1>
     `)
 });
 
 function startEnterval() {
-
+    
 }
 
 app.get('/end', (req, res) => {
-
+    sendNotification('end');
 })
