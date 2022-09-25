@@ -1,8 +1,7 @@
 const express = require('express');
 const jsdom = require("jsdom");
 const rp = require('request-promise');
-const r = require('request');
-const { get } = require('cheerio/lib/api/traversing');
+const r = require('request');``
 
 const port = process.env.PORT || 80;
 
@@ -10,7 +9,7 @@ const app = express();
 
 app.listen(port, () => {
     console.log('started')
-})
+});
 
 function getEURValue() {
     const url = `https://myfin.by/currency/mogilev`;
