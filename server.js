@@ -3,7 +3,13 @@ const jsdom = require("jsdom");
 const rp = require('request-promise');
 const r = require('request');
 
+const port = process.env.PORT || 80;
+
 const app = express();
+
+app.listen(port, () => {
+    console.log('started')
+})
 
 function sendNotification() {
     const url = `https://myfin.by/currency/mogilev`;
@@ -16,7 +22,7 @@ function sendNotification() {
     global.document = dom.window.document;
     global.navigator = global.window.navigator;
     const table = document.createElement("table");
-    rp(url).then(async function (html) {
+    rp(url).then(function (html) {
             table.innerHTML += html.split(/<\/?table>/)[1];
             const eurRate = table.querySelector('tbody tr:nth-child(2) td:nth-child(2)');
             console.log(`${botUrl}${eurRate.textContent}`);
