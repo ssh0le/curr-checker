@@ -1,18 +1,36 @@
 const express = require('express');
 const jsdom = require("jsdom");
 const rp = require('request-promise');
-const r = require('request');``
+const r = require('request');
+const TelegramApi = require('node-telegram-bot-api');
+
+const token = "5456371619:AAHSXc5X3WQc6Rdsp4JkTJfh11iSnK1lhFs";
 
 const port = process.env.PORT || 80;
-
 const app = express();
+const bot = new TelegramApi(token, {polling: true})
+
+bot.on("message", msg => {
+    const chat_id = msg.chat.id;
+    const text = msg.text.toLocaleLowerCase();
+    if (text === 'start') {
+        getEURValue('mogilev').then(res => {
+            bot.sendMessage(chat_id, res);
+        })
+    }
+    else {
+        getEURValue(text).then(res => {
+            bot.sendMessage(chat_id, res);
+        })
+    }
+})
 
 app.listen(port, () => {
     console.log('started')
 });
 
-function getEURValue() {
-    const url = `https://myfin.by/currency/mogilev`;
+function getEURValue(city) {
+    const url = `https://myfin.by/currency/${city}`;
     const {
         JSDOM
     } = jsdom;
@@ -46,7 +64,7 @@ app.get('/start', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    getEURValue().then(res => {
+    getEURValue('mogilev').then(res => {
         sendNotification(res);
     })
     res.end(`
