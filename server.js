@@ -12,6 +12,7 @@ const bot = new TelegramApi(token, {polling: true})
 
 bot.on("message", msg => {
     const chat_id = msg.chat.id;
+    console.log('i hear!!')
     const text = msg.text.toLocaleLowerCase();
     if (text === 'start') {
         getEURValue('mogilev').then(res => {
