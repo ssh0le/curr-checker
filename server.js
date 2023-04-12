@@ -56,13 +56,6 @@ function sendNotification(message) {
     }, (er, res) => {});
 }
 
-
-
-
-app.get('/start', (req, res) => {
-    sendNotification('start');
-});
-
 app.get('/', (req, res) => {
     getEURValue('mogilev').then(res => {
         sendNotification(res);
@@ -71,11 +64,3 @@ app.get('/', (req, res) => {
     <h1>HELLLLLLO</h1>
     `)
 });
-
-function startEnterval() {
-    
-}
-
-app.get('/end', (req, res) => {
-    sendNotification('end');
-})
