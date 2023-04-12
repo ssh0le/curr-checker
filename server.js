@@ -61,7 +61,6 @@ app.get('/', (req, res) => {
     getEURValue('mogilev').then(res => {
         sendNotification(res);
     })
-    res.end(`
-    <h1>HELLLLLLO</h1>
-    `)
+    console.log('new visitor!');
+    res.end(`hi`)
 });
